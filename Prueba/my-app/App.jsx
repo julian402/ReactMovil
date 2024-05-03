@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, ImageBackground, Image } from 'react-native';
 import { initializeApp } from '@firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAmgv45cfuUl4Xfm3P2lRJ0jJRF7xYcAtY",
-  authDomain: "test-4ddd4.firebaseapp.com",
-  projectId: "test-4ddd4",
-  storageBucket: "test-4ddd4.appspot.com",
-  messagingSenderId: "10288342584",
-  appId: "1:10288342584:web:1565f3e8671ceb667c68cd",
-  measurementId: "G-53DPFJXR0S"
-};
+ 
+const firebaseConfig = {  
+  apiKey: "AIzaSyAJRRvlpCen4nquAERNsX-ZhaTUci8Oicw",
+  authDomain: "digipets-e128a.firebaseapp.com",
+  projectId: "digipets-e128a",
+  storageBucket: "digipets-e128a.appspot.com",
+  messagingSenderId: "329527904529",
+  appId: "1:329527904529:web:34b69c7ca5a268018aa4b0",
+  measurementId: "G-K2N85TXV5F"
+}; 
 
 const app = initializeApp(firebaseConfig);
 
@@ -21,28 +20,31 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
     <ScrollView contentContainerStyle={styles.container}>
       <ImageBackground style={styles.background} 
       source={require('./assets/background.jpeg')}>
+      <View style={styles.back}></View>
       <Image style={styles.logo} 
       source={require('./assets/favicon.png')} />
-      <View style={styles.back}></View>
         <View style={styles.authContainer}>
-          <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
-
+          
+          <Text style={styles.txtlog}>
+            Correo 
+          </Text> 
           <TextInput
             style={styles.input}
             value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
+            onChangeText={setEmail} 
             autoCapitalize="none"
           />
+          <Text style={styles.txtlog}>
+            Contraseña
+          </Text>
           <TextInput
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder="Password"
             secureTextEntry
-          />
+          /> 
           <View style={styles.buttonContainer}>
-            <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={handleAuthentication} color="#3498db" />
+            <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress= {handleAuthentication} color='white'  /> 
           </View>
 
           <View style={styles.bottomContainer}>
@@ -52,17 +54,48 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
           </View>
         </View>
       </ImageBackground>
-    ></ScrollView>
+    </ScrollView>
   );
 }
 
+ 
 
 const AuthenticatedScreen = ({ user, handleAuthentication }) => {
+  const [tipoConsulta, setTipoConsulta] = useState('');
+  const [fechaCita, setFechaCita] = useState('');
+
+  const handleAgendarCita = () => {
+  
+    console.log('Tipo de Consulta:', tipoConsulta);
+    console.log('Fecha de la Cita:', fechaCita);
+  };
   return (
-    <View style={styles.authContainer}>
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.emailText}>{user.email}</Text>
-      <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
+    <View style={styles.container}>
+      {user && user.email && ( // Verificar si user y user.email están definidos
+        <>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.emailText}>{user.email}</Text>
+          <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
+        </>
+      )}
+      <Text style={styles.formTitle}>Agendar Cita</Text>
+      <TextInput
+        style={styles.input1}
+        value={tipoConsulta}
+        onChangeText={setTipoConsulta}
+        //placeholder="Tipo de Consulta"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input1}
+        value={fechaCita}
+        onChangeText={setFechaCita}
+        placeholder="Fecha de la Cita"
+        autoCapitalize="none"
+      />
+      <View style={styles.buttonContainer}>
+        <Button title="Agendar Cita" onPress={handleAgendarCita} color="#3498db" />
+      </View>
     </View>
   );
 };
@@ -129,20 +162,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, 
     //alignItems: 'stretch', 
-    backgroundColor: '#f0f0f0'
+    //backgroundColor: '#f0f0f0' 
   },
   logo: {
     width: 100,
     height: 100,
     alignSelf: 'center',
-    resizeMode: 'contain',
+    resizeMode: 'contain'
   },
   back:{
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#11418C',
-    opacity: 0.6,
+    opacity: 0.6
   },
   authContainer: {
+    alignSelf: 'center',
+    width: 300,
+    marginBottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderColor: '#ccc',
+    borderRadius: 25
+  },
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center'
+  },
+  input: {
     alignSelf: 'center',
     width: 300,
     marginBottom: 10,
@@ -151,40 +198,47 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 25,
+    color: 'white'   
+     
   },
   title: {
-    fontSize: 24,
-    width: 80,
-    marginBottom: 16,
-    textAlign: 'center',
-  
+    textAlign: 'center', 
+    color: 'white'
   },
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center'
-  },
-  input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 8,
-    borderRadius: 4
-  },
+
   buttonContainer: {
-    marginBottom: 16,
+    marginBottom: 16, 
 
   },
   toggleText: {
-    color: '#3498db',
-    textAlign: 'center',
+    color: 'white',
+    textAlign: 'center'
   },
   bottomContainer: {
+    marginTop: 20   
   },
   emailText: {
     fontSize: 18,
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+  },
+  txtlog: { 
+    marginBottom: 10,
+    marginTop: 10,
+    color: 'white',
+  },
+  
+  input1:{
+    height: 40,
+    width: '100%',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 10,
+    borderRadius: 4 
   }
-});
+
+}); 
+
+
+
