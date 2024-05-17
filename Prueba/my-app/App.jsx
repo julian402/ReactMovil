@@ -44,7 +44,7 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
             secureTextEntry
           /> 
           <View style={styles.buttonContainer}>
-            <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress= {handleAuthentication} color='white'  /> 
+            <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress= {handleAuthentication} color='#11418C'  /> 
           </View>
 
           <View style={styles.bottomContainer}>
@@ -58,47 +58,96 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
   );
 }
 
- 
+
+//### FORMULARIO AGENDAMIENTO DE CITAS ### 
 
 const AuthenticatedScreen = ({ user, handleAuthentication }) => {
-  const [tipoConsulta, setTipoConsulta] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [identificacion, setIdentificacion] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [idMascota, setIdMascota] = useState('');
   const [fechaCita, setFechaCita] = useState('');
 
-  const handleAgendarCita = () => {
-  
-    console.log('Tipo de Consulta:', tipoConsulta);
-    console.log('Fecha de la Cita:', fechaCita);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('http://172.17.25.34/PosteoAgendarCitaAppMovil/AgendarCita.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre: nombre,
+          identificacion: identificacion,
+          correo: correo,
+          idMascota: idMascota,
+          fecha: fechaCita,
+        }),
+      });
+      const data = await response.text();
+      console.log(data); // Manejar la respuesta del servidor si es necesario
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);
+    }
   };
+
   return (
-    <View style={styles.container}>
-      {user && user.email && ( // Verificar si user y user.email están definidos
-        <>
-          <Text style={styles.title}>Welcome</Text>
-          <Text style={styles.emailText}>{user.email}</Text>
-          <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
-        </>
-      )}
-      <Text style={styles.formTitle}>Agendar Cita</Text>
-      <TextInput
-        style={styles.input1}
-        value={tipoConsulta}
-        onChangeText={setTipoConsulta}
-        //placeholder="Tipo de Consulta"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input1}
-        value={fechaCita}
-        onChangeText={setFechaCita}
-        placeholder="Fecha de la Cita"
-        autoCapitalize="none"
-      />
-      <View style={styles.buttonContainer}>
-        <Button title="Agendar Cita" onPress={handleAgendarCita} color="#3498db" />
+    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.nav}>
+      <Image style={styles.logoFormAgendar}
+      source={require('./assets/LOGO-VERTICAL_AZUL.png')}></Image>
+      <Text style={styles.titleFormAgendar}>AGENDAMIENTO</Text>
+    </View>  
+    <ImageBackground style={styles.background} 
+    source={require('./assets/background.jpeg')}>
+    <View style={styles.back}></View>
+
+      <View style={styles.containerFormCitas}>
+        <Text style={styles.txtlog}>Nombre</Text> 
+        <TextInput
+          style={styles.input}
+          value={nombre}
+          onChangeText={setNombre}
+          autoCapitalize="none"
+        />
+        <Text style={styles.txtlog}>Identificacion</Text> 
+        <TextInput
+          style={styles.input}
+          value={identificacion}
+          onChangeText={setIdentificacion}
+          autoCapitalize="none"
+        />
+        <Text style={styles.txtlog}>Correo</Text> 
+        <TextInput
+          style={styles.input}
+          value={correo}
+          onChangeText={setCorreo}
+          autoCapitalize="none"
+        />
+        <Text style={styles.txtlog}>ID Mascota</Text> 
+        <TextInput
+          style={styles.input}
+          value={idMascota}
+          onChangeText={setIdMascota}
+          autoCapitalize="none"
+        />
+        <Text style={styles.txtlog}>Fecha</Text> 
+        <TextInput
+          style={styles.input}
+          value={fechaCita}
+          onChangeText={setFechaCita}
+          autoCapitalize="none"
+        />
+        <View style={styles.buttonContainer}>
+          <Button title="Agendar Cita" onPress={handleSubmit} color='#11418C' />
+        </View>
+        <Button title="Logout" onPress={handleAuthentication} color="#e74c3c"/>
       </View>
-    </View>
+    </ImageBackground>  
+    </ScrollView>
   );
 };
+
 export default App = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -170,6 +219,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     resizeMode: 'contain'
   },
+
+  logoFormAgendar: {
+    marginTop: 55, 
+    height: 150,
+    alignSelf: 'center',
+    resizeMode: 'contain'
+  },
+
   back:{
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#11418C',
@@ -187,7 +244,7 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: 'cover',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   input: {
     alignSelf: 'center',
@@ -198,17 +255,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 25,
-    color: 'white'   
+    color: 'white',  
+    fontSize: 20, 
      
   },
-  title: {
+  titleFormAgendar: {
     textAlign: 'center', 
-    color: 'white'
+    color: '#11418C',
+    fontSize: 25,
   },
 
   buttonContainer: {
-    marginBottom: 16, 
-
+    alignSelf: 'center',
+    width: 250,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    marginTop: 50
   },
   toggleText: {
     color: 'white',
@@ -226,6 +288,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     color: 'white',
+    fontSize: 20, 
   },
   
   input1:{
@@ -236,6 +299,19 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 10,
     borderRadius: 4 
+  },
+  
+  containerFormCitas:{
+    alignSelf: 'center',
+    width: 300,
+    marginBottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+
+  nav:{
+    backgroundColor: 'white',
+    height: 250
   }
 
 }); 
