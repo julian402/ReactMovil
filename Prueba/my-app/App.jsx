@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, ImageBackground, Image } from 'react-native';
 import { initializeApp } from '@firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
+
  
 const firebaseConfig = {  
   apiKey: "AIzaSyAJRRvlpCen4nquAERNsX-ZhaTUci8Oicw",
@@ -71,7 +72,7 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://172.17.25.34/PosteoAgendarCitaAppMovil/AgendarCita.php', {
+      const response = await fetch('http://172.20.10.3/PosteoAgendarCitaAppMovil/AgendarCita.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +164,7 @@ export default App = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  
+
   const handleAuthentication = async () => {
     try {
       if (user) {
@@ -207,6 +208,21 @@ export default App = () => {
     </ScrollView>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
